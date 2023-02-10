@@ -27,11 +27,13 @@ const getOptionalInput = (name: string) => core.getInput(name) || undefined;
     await gitUtils.setupUser();
   }
 
-  console.log("setting GitHub credentials");
-  await fs.writeFile(
-    `${process.env.HOME}/.netrc`,
-    `machine github.com\nlogin github-actions[bot]\npassword ${githubToken}`
-  );
+  if(process.platform !== 'win32') {
+    console.log("setting GitHub credentials");
+    await fs.writeFile(
+      `${process.env.HOME}/.netrc`,
+      `machine github.com\nlogin github-actions[bot]\npassword ${githubToken}`
+    );
+  }
 
   let { changesets } = await readChangesetState();
 
